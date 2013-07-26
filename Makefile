@@ -51,7 +51,7 @@ configure: $(UNZIP_DIR)/CMakeLists.txt
 		   -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ../$(UNZIP_DIR)
 
 $(UNZIP_DIR)/CMakeLists.txt:
-	wget $(DL_LINK) && tar -xzf $(DL_NAME) && rm $(DL_NAME)
+	wget --no-check-certificate $(DL_LINK) && tar -xzf $(DL_NAME) && rm $(DL_NAME)
 	$(SED) -i -e 's@share/pkgconfig@lib/pkgconfig@g' $(UNZIP_DIR)/CMakeLists.txt
 
 clean:
