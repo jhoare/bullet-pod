@@ -31,8 +31,25 @@ ifeq ($(shell uname), Darwin)
   SED=gsed
 endif
 
+BULLET_INSTALL_LIBS = libBulletCollision.2.81.dylib \
+	libBulletDynamics.2.81.dylib \
+	libBulletMultiThreaded.2.81.dylib \
+	libBulletSoftBody.2.81.dylib \
+	libBulletSoftBodySolvers_OpenCL_Apple.2.81.dylib \
+	libBulletSoftBodySolvers_OpenCL_Mini.2.81.dylib \
+	libLinearMath.2.81.dylib \
+	libMiniCL.2.81.dylib
+
 all: pod-build/Makefile
 	$(MAKE) -C pod-build all install
+ifeq ($(shell uname), Darwin)
+	@for lib in $(BULLET_INSTALL_LIBS); do \
+		install_name_tool -id $(BUILD_PREFIX)/lib/$$lib $(BUILD_PREFIX)/lib/$$lib; \
+		for deplib in $(BULLET_INSTALL_LIBS); do \
+			install_name_tool -change $$deplib $(BUILD_PREFIX)/lib/$$deplib $(BUILD_PREFIX)/lib/$$lib; \
+		done; \
+	done
+endif
 
 pod-build/Makefile:
 	$(MAKE) configure
@@ -46,9 +63,9 @@ configure: $(UNZIP_DIR)/CMakeLists.txt
 
 	# run CMake to generate and configure the build scripts
 	@cd pod-build && cmake -DCMAKE_INSTALL_PREFIX=$(BUILD_PREFIX) \
-                    -DBUILD_SHARED_LIBS=on \
-                    -DINSTALL_LIBS=on \
-		   -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ../$(UNZIP_DIR)
+		-DBUILD_SHARED_LIBS=on \
+                -DINSTALL_LIBS=on \
+		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ../$(UNZIP_DIR) 
 
 $(UNZIP_DIR)/CMakeLists.txt:
 	wget --no-check-certificate $(DL_LINK) && tar -xzf $(DL_NAME) && rm $(DL_NAME)
