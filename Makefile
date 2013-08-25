@@ -65,6 +65,7 @@ configure: $(UNZIP_DIR)/CMakeLists.txt
 	@cd pod-build && cmake -DCMAKE_INSTALL_PREFIX=$(BUILD_PREFIX) \
 		-DBUILD_SHARED_LIBS=on \
                 -DINSTALL_LIBS=on \
+		-DBUILD_DEMOS=off \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ../$(UNZIP_DIR) 
 
 $(UNZIP_DIR)/CMakeLists.txt:
