@@ -72,6 +72,9 @@ $(UNZIP_DIR)/CMakeLists.txt:
 	wget --no-check-certificate $(DL_LINK) && tar -xzf $(DL_NAME) && rm $(DL_NAME)
 	$(SED) -i -e 's@share/pkgconfig@lib/pkgconfig@g' $(UNZIP_DIR)/CMakeLists.txt
 
+install_prereqs_homebrew :
+	brew install gnu-sed
+
 clean:
 	-if [ -e pod-build/install_manifest.txt ]; then rm -f `cat pod-build/install_manifest.txt`; fi
 	-if [ -d pod-build ]; then $(MAKE) -C pod-build clean; rm -rf pod-build; fi
