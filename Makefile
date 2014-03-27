@@ -66,6 +66,7 @@ configure: $(UNZIP_DIR)/CMakeLists.txt
 		-DBUILD_SHARED_LIBS=on \
                 -DINSTALL_LIBS=on \
 		-DBUILD_DEMOS=off \
+		-DUSE_DOUBLE_PRECISION=on \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ../$(UNZIP_DIR) 
 
 $(UNZIP_DIR)/CMakeLists.txt:
