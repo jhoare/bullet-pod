@@ -66,11 +66,13 @@ configure: $(UNZIP_DIR)/CMakeLists.txt
 		-DBUILD_SHARED_LIBS=on \
                 -DINSTALL_LIBS=on \
 		-DBUILD_DEMOS=off \
+		-DUSE_DOUBLE_PRECISION=on \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ../$(UNZIP_DIR) 
 
 $(UNZIP_DIR)/CMakeLists.txt:
 	wget --no-check-certificate $(DL_LINK) && tar -xzf $(DL_NAME) && rm $(DL_NAME)
 	$(SED) -i -e 's@share/pkgconfig@lib/pkgconfig@g' $(UNZIP_DIR)/CMakeLists.txt
+	patch -p0 -i bullet_gjk_accuracy_patch.diff
 
 install_prereqs_homebrew :
 	brew install gnu-sed
