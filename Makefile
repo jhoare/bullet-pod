@@ -67,7 +67,7 @@ configure: $(UNZIP_DIR)/CMakeLists.txt
                 -DINSTALL_LIBS=on \
 		-DBUILD_DEMOS=off \
 		-DUSE_DOUBLE_PRECISION=on \
-		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ../$(UNZIP_DIR) 
+		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ../$(UNZIP_DIR)
 
 $(UNZIP_DIR)/CMakeLists.txt: bullet_gjk_accuracy_patch.diff
 	wget --no-check-certificate $(DL_LINK) && tar -xzf $(DL_NAME) && rm $(DL_NAME)
@@ -75,9 +75,6 @@ $(UNZIP_DIR)/CMakeLists.txt: bullet_gjk_accuracy_patch.diff
 	patch -p0 -i bullet_gjk_accuracy_patch.diff
 	mv $(UNZIP_DIR)/src/LinearMath/btScalar.h $(UNZIP_DIR)/src/LinearMath/btScalar.h.in
 	patch -p0 -i bullet_double_precision_patch.diff
-
-install_prereqs_homebrew :
-	brew install gnu-sed
 
 clean:
 	-if [ -e pod-build/install_manifest.txt ]; then rm -f `cat pod-build/install_manifest.txt`; fi
