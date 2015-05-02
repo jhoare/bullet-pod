@@ -29,7 +29,7 @@ BULLET_OPTIONS:= -DINSTALL_LIBS=on \
 ifeq ($(shell uname -o),Cygwin)
 BUILD_PREFIX:=$(shell cygpath -m $(BUILD_PREFIX))
 else
-BULLET_OPTIONS:=$(BULLET_OPTIONS) -DBUILD_SHARED_LIBS=on   # shared libs don't seem to work on windows
+BULLET_OPTIONS:=$(BULLET_OPTIONS) -DBUILD_SHARED_LIBS=on   # shared libs doesn't work with msvc (there aren't any dllexports defined) 
 endif
 
 # Default to a release build.  If you want to enable debugging flags, run
