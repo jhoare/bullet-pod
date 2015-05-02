@@ -20,6 +20,18 @@ endif
 # create the build directory if needed, and normalize its path name
 BUILD_PREFIX:=$(shell mkdir -p $(BUILD_PREFIX) && cd $(BUILD_PREFIX) && echo `pwd`)
 
+
+BULLET_OPTIONS:= -DINSTALL_LIBS=on \
+		 -DBUILD_DEMOS=off \
+		 -DUSE_DOUBLE_PRECISION=on \
+
+
+ifeq ($(shell uname -o),Cygwin)
+BUILD_PREFIX:=$(shell cygpath -m $(BUILD_PREFIX))
+else
+BULLET_OPTIONS:=$(BULLET_OPTIONS) -DBUILD_SHARED_LIBS=on   # shared libs don't seem to work on windows
+endif
+
 # Default to a release build.  If you want to enable debugging flags, run
 # "make BUILD_TYPE=Debug"
 ifeq "$(BUILD_TYPE)" ""
@@ -41,7 +53,7 @@ BULLET_INSTALL_LIBS = libBulletCollision.2.81.dylib \
 	libMiniCL.2.81.dylib
 
 all: pod-build/Makefile
-	$(MAKE) -C pod-build all install
+	cmake --build pod-build --config $(BUILD_TYPE) --target install
 ifeq ($(shell uname), Darwin)
 	@for lib in $(BULLET_INSTALL_LIBS); do \
 		install_name_tool -id $(BUILD_PREFIX)/lib/$$lib $(BUILD_PREFIX)/lib/$$lib; \
@@ -62,11 +74,7 @@ configure: $(UNZIP_DIR)/CMakeLists.txt
 	@mkdir -p pod-build
 
 	# run CMake to generate and configure the build scripts
-	@cd pod-build && cmake -DCMAKE_INSTALL_PREFIX=$(BUILD_PREFIX) \
-		-DBUILD_SHARED_LIBS=on \
-                -DINSTALL_LIBS=on \
-		-DBUILD_DEMOS=off \
-		-DUSE_DOUBLE_PRECISION=on \
+	@cd pod-build && cmake $(CMAKE_FLAGS) -DCMAKE_INSTALL_PREFIX=$(BUILD_PREFIX) $(BULLET_OPTIONS) \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ../$(UNZIP_DIR)
 
 $(UNZIP_DIR)/CMakeLists.txt: bullet_gjk_accuracy_patch.diff
