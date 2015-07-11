@@ -3,31 +3,38 @@ DL_NAME   = bullet-2.81-rev2613.tgz
 UNZIP_DIR = bullet-2.81-rev2613
 
 
-default_target: all
-
-# Default to a less-verbose build.  If you want all the gory compiler output,
-# run "make VERBOSE=1"
-$(VERBOSE).SILENT:
+BUILD_SYSTEM:=$(OS)
+ifeq ($(BUILD_SYSTEM),Windows_NT)
+BUILD_SYSTEM:=$(shell uname -o 2> NUL || echo Windows_NT) # set to Cygwin if appropriate
+else
+BUILD_SYSTEM:=$(shell uname -s)
+endif
+BUILD_SYSTEM:=$(strip $(BUILD_SYSTEM))
 
 # Figure out where to build the software.
 #   Use BUILD_PREFIX if it was passed in.
 #   If not, search up to four parent directories for a 'build' directory.
 #   Otherwise, use ./build.
+ifeq ($(BUILD_SYSTEM), Windows_NT)
+ifeq "$(BUILD_PREFIX)" ""
+BUILD_PREFIX:=$(shell (for %%x in (. .. ..\.. ..\..\.. ..\..\..\..) do ( if exist %cd%\%%x\build ( echo %cd%\%%x\build & exit ) )) & echo %cd%\build )
+endif
+# don't clean up and create build dir as I do in linux.  instead create it during configure.
+else
 ifeq "$(BUILD_PREFIX)" ""
 BUILD_PREFIX:=$(shell for pfx in ./ .. ../.. ../../.. ../../../..; do d=`pwd`/$$pfx/build;\
                if [ -d $$d ]; then echo $$d; exit 0; fi; done; echo `pwd`/build)
 endif
 # create the build directory if needed, and normalize its path name
 BUILD_PREFIX:=$(shell mkdir -p $(BUILD_PREFIX) && cd $(BUILD_PREFIX) && echo `pwd`)
-
+endif
 
 BULLET_OPTIONS:= -DINSTALL_LIBS=on \
 		 -DBUILD_DEMOS=off \
-		 -DUSE_DOUBLE_PRECISION=on \
+		 -DUSE_DOUBLE_PRECISION=on 
 
-
-ifeq ($(shell uname -o),Cygwin)
-BUILD_PREFIX:=$(shell cygpath -m $(BUILD_PREFIX))
+ifeq "$(BUILD_SYSTEM)" "Cygwin"
+  BUILD_PREFIX:=$(shell cygpath -m $(BUILD_PREFIX))
 else
 BULLET_OPTIONS:=$(BULLET_OPTIONS) -DBUILD_SHARED_LIBS=on   # shared libs doesn't work with msvc (there aren't any dllexports defined) 
 endif
@@ -89,3 +96,8 @@ $(UNZIP_DIR)/CMakeLists.txt: bullet_gjk_accuracy_patch.diff
 clean:
 	-if [ -e pod-build/install_manifest.txt ]; then rm -f `cat pod-build/install_manifest.txt`; fi
 	-if [ -d pod-build ]; then $(MAKE) -C pod-build clean; rm -rf pod-build; fi
+
+# Default to a less-verbose build.  If you want all the gory compiler output,
+# run "make VERBOSE=1"
+$(VERBOSE).SILENT:
+
