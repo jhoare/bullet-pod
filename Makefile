@@ -54,10 +54,10 @@ BULLET_INSTALL_LIBS = libBulletCollision.2.81.dylib \
 	libBulletDynamics.2.81.dylib \
 	libBulletMultiThreaded.2.81.dylib \
 	libBulletSoftBody.2.81.dylib \
-	libBulletSoftBodySolvers_OpenCL_Apple.2.81.dylib \
 	libBulletSoftBodySolvers_OpenCL_Mini.2.81.dylib \
 	libLinearMath.2.81.dylib \
 	libMiniCL.2.81.dylib
+#	libBulletSoftBodySolvers_OpenCL_Apple.2.81.dylib \
 
 all: pod-build/Makefile
 	cmake --build pod-build --config $(BUILD_TYPE) --target install
@@ -84,8 +84,11 @@ configure: $(UNZIP_DIR)/CMakeLists.txt
 	@cd pod-build && cmake $(CMAKE_FLAGS) -DCMAKE_INSTALL_PREFIX=$(BUILD_PREFIX) $(BULLET_OPTIONS) \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ../$(UNZIP_DIR)
 
-$(UNZIP_DIR)/CMakeLists.txt: bullet_gjk_accuracy_patch.diff
-	wget --no-check-certificate $(DL_LINK) && tar -xzf $(DL_NAME) && rm $(DL_NAME)
+$(DL_NAME) : 
+	wget --no-check-certificate $(DL_LINK) -O $(DL_NAME)
+
+$(UNZIP_DIR)/CMakeLists.txt: bullet_gjk_accuracy_patch.diff $(DL_NAME)
+	tar -xzf $(DL_NAME)	
 	$(SED) -i -e 's@share/pkgconfig@lib/pkgconfig@g' $(UNZIP_DIR)/CMakeLists.txt
 	patch -p0 -i bullet_gjk_accuracy_patch.diff
 	mv $(UNZIP_DIR)/src/LinearMath/btScalar.h $(UNZIP_DIR)/src/LinearMath/btScalar.h.in
