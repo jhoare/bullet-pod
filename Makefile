@@ -5,7 +5,7 @@ UNZIP_DIR = bullet-2.81-rev2613
 
 BUILD_SYSTEM:=$(OS)
 ifeq ($(BUILD_SYSTEM),Windows_NT)
-BUILD_SYSTEM:=$(shell uname -o 2> NUL || echo Windows_NT) # set to Cygwin if appropriate
+BUILD_SYSTEM:=$(shell uname -o 2> uname.err || echo Windows_NT) # set to Cygwin if appropriate
 else
 BUILD_SYSTEM:=$(shell uname -s)
 endif
