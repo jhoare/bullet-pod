@@ -31,7 +31,8 @@ endif
 
 BULLET_OPTIONS:= -DINSTALL_LIBS=on \
 		 -DBUILD_DEMOS=off \
-		 -DUSE_DOUBLE_PRECISION=on 
+		 -DUSE_DOUBLE_PRECISION=on \
+		 -DUSE_DX11=off # easier to get it building on windows.  might want to re-enable
 
 ifeq "$(BUILD_SYSTEM)" "Cygwin"
   BUILD_PREFIX:=$(shell cygpath -m $(BUILD_PREFIX))
