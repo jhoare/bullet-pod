@@ -1,7 +1,7 @@
-diff --git bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp
+diff --git bullet3-2.83.6/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp bullet3-2.83.6/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp
 index 3268f06..b3559e4 100644
---- bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp
-+++ bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp
+--- bullet3-2.83.6/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp
++++ bullet3-2.83.6/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp
 @@ -41,21 +41,21 @@ namespace gjkepa2_impl
  
  	/* GJK	*/ 
@@ -31,10 +31,10 @@ index 3268f06..b3559e4 100644
  
  
  	// Shorthands
-diff --git bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp
+diff --git bullet3-2.83.6/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp bullet3-2.83.6/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp
 index 8af16b9..8a03f66 100644
---- bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp
-+++ bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp
+--- bullet3-2.83.6/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp
++++ bullet3-2.83.6/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp
 @@ -31,7 +31,7 @@ subject to the following restrictions:
  #endif
  
