@@ -94,7 +94,6 @@ $(UNZIP_DIR)/CMakeLists.txt: bullet_gjk_accuracy_patch.diff $(DL_NAME)
 	patch -p0 -i bullet_gjk_accuracy_patch.diff
 	mv $(UNZIP_DIR)/src/LinearMath/btScalar.h $(UNZIP_DIR)/src/LinearMath/btScalar.h.in
 	patch -p0 -i bullet_double_precision_patch.diff
-	patch -p0 -i bullet_windows_pkgconfig.diff
 
 clean:
 	-if [ -e pod-build/install_manifest.txt ]; then rm -f `cat pod-build/install_manifest.txt`; fi
