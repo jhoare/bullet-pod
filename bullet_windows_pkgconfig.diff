@@ -1,5 +1,5 @@
---- bullet-2.81-rev2613/CMakeLists.txt	
-+++ bullet-2.81-rev2613/CMakeLists.txt
+--- bullet3-2.83.6/CMakeLists.txt	
++++ bullet3-2.83.6/CMakeLists.txt
 @@ -398,14 +398,14 @@
  	## the following are directories where stuff will be installed to
  	SET(INCLUDE_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/include/bullet/" CACHE PATH "The subdirectory to the header prefix")

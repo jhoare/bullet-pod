@@ -1,7 +1,6 @@
-DL_LINK   = https://bullet.googlecode.com/files/bullet-2.81-rev2613.tgz
-DL_NAME   = bullet-2.81-rev2613.tgz
-UNZIP_DIR = bullet-2.81-rev2613
-
+DL_LINK = https://github.com/bulletphysics/bullet3/archive/2.83.6.tar.gz
+DL_NAME = 2.83.6.tar.gz
+UNZIP_DIR = bullet3-2.83.6
 
 BUILD_SYSTEM:=$(OS)
 ifeq ($(BUILD_SYSTEM),Windows_NT)
@@ -51,13 +50,13 @@ ifeq ($(shell uname), Darwin)
   SED=gsed
 endif
 
-BULLET_INSTALL_LIBS = libBulletCollision.2.81.dylib \
-	libBulletDynamics.2.81.dylib \
-	libBulletMultiThreaded.2.81.dylib \
-	libBulletSoftBody.2.81.dylib \
-	libBulletSoftBodySolvers_OpenCL_Mini.2.81.dylib \
-	libLinearMath.2.81.dylib \
-	libMiniCL.2.81.dylib
+BULLET_INSTALL_LIBS = libBulletCollision.2.83.dylib \
+	libBulletDynamics.2.83.dylib \
+	libBulletMultiThreaded.2.83.dylib \
+	libBulletSoftBody.2.83.dylib \
+	libBulletSoftBodySolvers_OpenCL_Mini.2.83.dylib \
+	libLinearMath.2.83.dylib \
+	libMiniCL.2.83.dylib
 #	libBulletSoftBodySolvers_OpenCL_Apple.2.81.dylib \
 
 all: pod-build/Makefile
@@ -88,13 +87,13 @@ configure: $(UNZIP_DIR)/CMakeLists.txt
 $(DL_NAME) : 
 	wget --no-check-certificate $(DL_LINK) -O $(DL_NAME)
 
+
 $(UNZIP_DIR)/CMakeLists.txt: bullet_gjk_accuracy_patch.diff $(DL_NAME)
 	tar -xzf $(DL_NAME)	
 	$(SED) -i -e 's@share/pkgconfig@lib/pkgconfig@g' $(UNZIP_DIR)/CMakeLists.txt
 	patch -p0 -i bullet_gjk_accuracy_patch.diff
 	mv $(UNZIP_DIR)/src/LinearMath/btScalar.h $(UNZIP_DIR)/src/LinearMath/btScalar.h.in
 	patch -p0 -i bullet_double_precision_patch.diff
-	patch -p0 -i bullet_use_btGjkConvexCast_patch.diff
 	patch -p0 -i bullet_windows_pkgconfig.diff
 
 clean:
