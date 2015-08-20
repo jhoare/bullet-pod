@@ -50,14 +50,16 @@ ifeq ($(shell uname), Darwin)
   SED=gsed
 endif
 
-BULLET_INSTALL_LIBS = libBulletCollision.2.83.dylib \
-	libBulletDynamics.2.83.dylib \
-	libBulletMultiThreaded.2.83.dylib \
+BULLET_INSTALL_LIBS = libBullet3OpenCL_clew.2.83.dylib \
+	libBullet2FileLoader.2.83.dylib \
+	libBullet3Dynamics.2.83.dylib \
+	libBullet3Collision.2.83.dylib \
+	libBullet3Geometry.2.83.dylib \
+	libBullet3Common.2.83.dylib \
 	libBulletSoftBody.2.83.dylib \
-	libBulletSoftBodySolvers_OpenCL_Mini.2.83.dylib \
-	libLinearMath.2.83.dylib \
-	libMiniCL.2.83.dylib
-#	libBulletSoftBodySolvers_OpenCL_Apple.2.81.dylib \
+	libBulletCollision.2.83.dylib \
+	libBulletDynamics.2.83.dylib \
+	libLinearMath.2.83.dylib 
 
 all: pod-build/Makefile
 	cmake --build pod-build --config $(BUILD_TYPE) --target install
