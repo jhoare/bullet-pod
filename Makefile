@@ -29,7 +29,11 @@ BUILD_PREFIX:=$(shell mkdir -p $(BUILD_PREFIX) && cd $(BUILD_PREFIX) && echo `pw
 endif
 
 BULLET_OPTIONS:= -DINSTALL_LIBS=on \
-		 -DBUILD_DEMOS=off \
+		 -DBUILD_BULLET2_DEMOS=off \
+		 -DBUILD_CPU_DEMOS=off \
+		 -DBUILD_EXTRAS=off \
+		 -DBUILD_OPENGL3_DEMOS=off\
+		 -DBUILD_UNIT_TESTS=off\
 		 -DUSE_DOUBLE_PRECISION=on \
 		 -DUSE_DX11=off # easier to get it building on windows.  might want to re-enable
 
