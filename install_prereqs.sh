@@ -2,7 +2,7 @@
 
 case $1 in
   ("homebrew")
-    brew install gnu-sed ;;
+    brew install gnu-sed wget ;;
   ("macports")
     ;;
   ("ubuntu")
