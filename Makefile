@@ -61,7 +61,7 @@ endif
 
 # run CMake to generate and configure the build scripts
 	@cd pod-build && cmake $(CMAKE_FLAGS) -DCMAKE_INSTALL_PREFIX=$(BUILD_PREFIX) \
-	       	-DEIGEN_BUILD_PKGCONFIG=ON -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ..
+	       	-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ..
 
 release_filelist:
 # intentionally left blank
