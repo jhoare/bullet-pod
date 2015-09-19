@@ -23,8 +23,6 @@ ExternalProject_Add(bullet3
   CMAKE_ARGS -G${CMAKE_GENERATOR} 
   			 -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} 
   			 -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} 
-  			 -DCMAKE_INSTALL_RPATH=${CMAKE_INSTALL_PREFIX}/lib
-  			 -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE
   			 ${BULLET_OPTIONS}
   PATCH_COMMAND patch -p0 -i ${PROJECT_SOURCE_DIR}/bullet_gjk_accuracy_patch.diff 
   	COMMAND ${CMAKE_COMMAND} -E rename src/LinearMath/btScalar.h src/LinearMath/btScalar.h.in
