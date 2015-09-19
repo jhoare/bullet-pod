@@ -1,5 +1,5 @@
---- bullet3-2.83.6/CMakeLists.txt
-+++ bullet3-2.83.6/CMakeLists.txt
+--- CMakeLists.txt
++++ CMakeLists.txt
 @@ -255,14 +255,14 @@ IF(INSTALL_LIBS)
  	## the following are directories where stuff will be installed to
  	SET(INCLUDE_INSTALL_DIR      "include/bullet/" CACHE PATH "The subdirectory to the header prefix")

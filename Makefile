@@ -1,6 +1,3 @@
-DL_LINK = https://github.com/bulletphysics/bullet3/archive/2.83.6.tar.gz
-DL_NAME = 2.83.6.tar.gz
-UNZIP_DIR = bullet3-2.83.6
 
 BUILD_SYSTEM:=$(OS)
 ifeq ($(BUILD_SYSTEM),Windows_NT)
@@ -28,89 +25,58 @@ endif
 BUILD_PREFIX:=$(shell mkdir -p $(BUILD_PREFIX) && cd $(BUILD_PREFIX) && echo `pwd`)
 endif
 
-BULLET_OPTIONS:= -DINSTALL_LIBS=on \
-		 -DBUILD_BULLET2_DEMOS=off \
-		 -DBUILD_CPU_DEMOS=off \
-		 -DBUILD_EXTRAS=off \
-		 -DBUILD_OPENGL3_DEMOS=off\
-		 -DBUILD_UNIT_TESTS=off\
-		 -DUSE_DOUBLE_PRECISION=on \
-		 -DUSE_DX11=off # easier to get it building on windows.  might want to re-enable
-
 ifeq "$(BUILD_SYSTEM)" "Cygwin"
   BUILD_PREFIX:=$(shell cygpath -m $(BUILD_PREFIX))
-endif
-
-ifneq "$(OS)" "Windows_NT"
-	BULLET_OPTIONS:=$(BULLET_OPTIONS) -DBUILD_SHARED_LIBS=on   # shared libs doesn't work with msvc (there aren't any dllexports defined)
 endif
 
 # Default to a release build.  If you want to enable debugging flags, run
 # "make BUILD_TYPE=Debug"
 ifeq "$(BUILD_TYPE)" ""
-BUILD_TYPE="Release"
+  BUILD_TYPE="Release"
 endif
-
-SED=sed
-ifeq ($(shell uname), Darwin)
-  SED=gsed
-endif
-
-BULLET_INSTALL_LIBS = libBullet3OpenCL_clew.2.83.dylib \
-	libBullet2FileLoader.2.83.dylib \
-	libBullet3Dynamics.2.83.dylib \
-	libBullet3Collision.2.83.dylib \
-	libBullet3Geometry.2.83.dylib \
-	libBullet3Common.2.83.dylib \
-	libBulletSoftBody.2.83.dylib \
-	libBulletCollision.2.83.dylib \
-	libBulletDynamics.2.83.dylib \
-	libLinearMath.2.83.dylib
 
 all: pod-build/Makefile
 	cmake --build pod-build --config $(BUILD_TYPE) --target install
-ifeq ($(shell uname), Darwin)
-	@for lib in $(BULLET_INSTALL_LIBS); do \
-		install_name_tool -id $(BUILD_PREFIX)/lib/$$lib $(BUILD_PREFIX)/lib/$$lib; \
-		for deplib in $(BULLET_INSTALL_LIBS); do \
-			install_name_tool -change $$deplib $(BUILD_PREFIX)/lib/$$deplib $(BUILD_PREFIX)/lib/$$lib; \
-		done; \
-	done
-endif
 
 pod-build/Makefile:
 	"$(MAKE)" configure
 
 .PHONY: configure
-configure: $(UNZIP_DIR)/CMakeLists.txt
-	@echo "\nBUILD_PREFIX: $(BUILD_PREFIX)\n\n"
+configure:
+#	@echo "BUILD_SYSTEM: '$(BUILD_SYSTEM)'"
+	@echo "BUILD_PREFIX: $(BUILD_PREFIX)"
 
-	# create the temporary build directory if needed
+# create the temporary build directory if needed
+# create the lib directory if needed, so the pkgconfig gets installed to the right place
+ifeq ($(BUILD_SYSTEM), Windows_NT)
+	@if not exist $(BUILD_PREFIX) ( mkdir "$(BUILD_PREFIX)" )
+	@if not exist pod-build ( mkdir pod-build )
+	@if not exist $(BUILD_PREFIX)\lib ( mkdir "$(BUILD_PREFIX)\lib" )
+	@if not exist $(BUILD_PREFIX)\lib\pkgconfig ( mkdir "$(BUILD_PREFIX)\lib\pkgconfig" )
+else
 	@mkdir -p pod-build
+	@mkdir -p $(BUILD_PREFIX)/lib
+	@mkdir -p $(BUILD_PREFIX)/lib/pkgconfig
+endif
 
-	# run CMake to generate and configure the build scripts
-	@cd pod-build && cmake $(CMAKE_FLAGS) -DCMAKE_INSTALL_PREFIX=$(BUILD_PREFIX) $(BULLET_OPTIONS) \
-		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ../$(UNZIP_DIR)
+# run CMake to generate and configure the build scripts
+	@cd pod-build && cmake $(CMAKE_FLAGS) -DCMAKE_INSTALL_PREFIX=$(BUILD_PREFIX) \
+	       	-DEIGEN_BUILD_PKGCONFIG=ON -DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ..
 
-$(DL_NAME) :
-	wget --no-check-certificate $(DL_LINK) -O $(DL_NAME)
-
-
-$(UNZIP_DIR)/CMakeLists.txt: bullet_gjk_accuracy_patch.diff $(DL_NAME)
-	tar -xzf $(DL_NAME)
-	$(SED) -i -e 's@share/pkgconfig@lib/pkgconfig@g' $(UNZIP_DIR)/CMakeLists.txt
-	patch -p0 -i bullet_gjk_accuracy_patch.diff
-	mv $(UNZIP_DIR)/src/LinearMath/btScalar.h $(UNZIP_DIR)/src/LinearMath/btScalar.h.in
-	patch -p0 -i bullet_double_precision_patch.diff
-	patch -p0 -i bullet_windows_pkgconfig.diff
+release_filelist:
+# intentionally left blank
 
 clean:
 ifeq ($(BUILD_SYSTEM),Windows_NT)
 	rd /s pod-build
 else
 	-if [ -e pod-build/install_manifest.txt ]; then rm -f `cat pod-build/install_manifest.txt`; fi
-	-if [ -d pod-build ]; then rm -rf pod-build; fi
+	-if [ -d pod-build ]; then cmake --build pod-build --target clean; rm -rf pod-build; fi
 endif
+
+# other (custom) targets are passed through to the cmake-generated Makefile
+%::
+	cmake --build pod-build --config $(BUILD_TYPE) --target $@
 
 # Default to a less-verbose build.  If you want all the gory compiler output,
 # run "make VERBOSE=1"
