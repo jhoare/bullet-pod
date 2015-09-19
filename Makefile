@@ -39,8 +39,10 @@ BULLET_OPTIONS:= -DINSTALL_LIBS=on \
 
 ifeq "$(BUILD_SYSTEM)" "Cygwin"
   BUILD_PREFIX:=$(shell cygpath -m $(BUILD_PREFIX))
-else
-BULLET_OPTIONS:=$(BULLET_OPTIONS) -DBUILD_SHARED_LIBS=on   # shared libs doesn't work with msvc (there aren't any dllexports defined) 
+endif
+
+ifneq "$(OS)" "Windows_NT"
+	BULLET_OPTIONS:=$(BULLET_OPTIONS) -DBUILD_SHARED_LIBS=on   # shared libs doesn't work with msvc (there aren't any dllexports defined)
 endif
 
 # Default to a release build.  If you want to enable debugging flags, run
@@ -63,7 +65,7 @@ BULLET_INSTALL_LIBS = libBullet3OpenCL_clew.2.83.dylib \
 	libBulletSoftBody.2.83.dylib \
 	libBulletCollision.2.83.dylib \
 	libBulletDynamics.2.83.dylib \
-	libLinearMath.2.83.dylib 
+	libLinearMath.2.83.dylib
 
 all: pod-build/Makefile
 	cmake --build pod-build --config $(BUILD_TYPE) --target install
@@ -77,7 +79,7 @@ ifeq ($(shell uname), Darwin)
 endif
 
 pod-build/Makefile:
-	$(MAKE) configure
+	"$(MAKE)" configure
 
 .PHONY: configure
 configure: $(UNZIP_DIR)/CMakeLists.txt
@@ -90,12 +92,12 @@ configure: $(UNZIP_DIR)/CMakeLists.txt
 	@cd pod-build && cmake $(CMAKE_FLAGS) -DCMAKE_INSTALL_PREFIX=$(BUILD_PREFIX) $(BULLET_OPTIONS) \
 		-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) ../$(UNZIP_DIR)
 
-$(DL_NAME) : 
+$(DL_NAME) :
 	wget --no-check-certificate $(DL_LINK) -O $(DL_NAME)
 
 
 $(UNZIP_DIR)/CMakeLists.txt: bullet_gjk_accuracy_patch.diff $(DL_NAME)
-	tar -xzf $(DL_NAME)	
+	tar -xzf $(DL_NAME)
 	$(SED) -i -e 's@share/pkgconfig@lib/pkgconfig@g' $(UNZIP_DIR)/CMakeLists.txt
 	patch -p0 -i bullet_gjk_accuracy_patch.diff
 	mv $(UNZIP_DIR)/src/LinearMath/btScalar.h $(UNZIP_DIR)/src/LinearMath/btScalar.h.in
@@ -103,10 +105,13 @@ $(UNZIP_DIR)/CMakeLists.txt: bullet_gjk_accuracy_patch.diff $(DL_NAME)
 	patch -p0 -i bullet_windows_pkgconfig.diff
 
 clean:
+ifeq ($(BUILD_SYSTEM),Windows_NT)
+	rd /s pod-build
+else
 	-if [ -e pod-build/install_manifest.txt ]; then rm -f `cat pod-build/install_manifest.txt`; fi
-	-if [ -d pod-build ]; then $(MAKE) -C pod-build clean; rm -rf pod-build; fi
+	-if [ -d pod-build ]; then rm -rf pod-build; fi
+endif
 
 # Default to a less-verbose build.  If you want all the gory compiler output,
 # run "make VERBOSE=1"
 $(VERBOSE).SILENT:
-
