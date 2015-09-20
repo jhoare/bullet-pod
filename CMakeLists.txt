@@ -11,10 +11,11 @@ set(BULLET_OPTIONS -DINSTALL_LIBS=on
 		 -DBUILD_OPENGL3_DEMOS=off
 		 -DBUILD_UNIT_TESTS=off
 		 -DUSE_DOUBLE_PRECISION=on) 
-#		 -DUSE_DX11=off) # easier to get it building on windows.  might want to re-enable
 
-if (NOT WIN32)
-	list(APPEND BULLET_OPTIONS -DBUILD_SHARED_LIBS=on)   # shared libs doesn't work with msvc (there aren't any dllexports defined) )
+if (WIN32)
+	list(APPEND BULLET_OPTIONS -DUSE_MSVC_RUNTIME_LIBRARY_DLL=off)
+else()
+	list(APPEND BULLET_OPTIONS -DBUILD_SHARED_LIBS=on)   # shared libs doesn't work with msvc (there aren't any dllexports defined) 
 endif()
 
 ExternalProject_Add(bullet3
