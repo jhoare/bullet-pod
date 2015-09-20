@@ -28,6 +28,7 @@ ExternalProject_Add(bullet3
   	COMMAND ${CMAKE_COMMAND} -E rename src/LinearMath/btScalar.h src/LinearMath/btScalar.h.in
   	COMMAND patch -p0 -i ${PROJECT_SOURCE_DIR}/bullet_double_precision_patch.diff
 	COMMAND patch -p0 -i ${PROJECT_SOURCE_DIR}/bullet_windows_pkgconfig.diff
+  BUILD_ALWAYS TRUE
   )
 
 add_custom_target(install DEPENDS bullet3)  # just to have an explicit install rule
@@ -46,16 +47,15 @@ if (APPLE)
 		libLinearMath.2.83.dylib )	
 
 	foreach(__lib ${BULLET_INSTALL_LIBS})
-		add_custom_target(fixup_rpath_${__lib} 
-			COMMAND install_name_tool -id ${CMAKE_INSTALL_PREFIX}/lib/${__lib} ${CMAKE_INSTALL_PREFIX}/lib/${__lib}
-			DEPENDS bullet3)
+		set(fixup_deplib_command)
 		foreach(__deplib ${BULLET_INSTALL_LIBS})		
-			add_custom_target(fixup_rpath_${__lib}_${__deplib} 
-				COMMAND install_name_tool -change ${__deplib} ${CMAKE_INSTALL_PREFIX}/lib/${__deplib} ${CMAKE_INSTALL_PREFIX}/lib/${__lib}
-				DEPENDS bullet3
-			)
-			add_dependencies(fixup_rpath_${__lib} fixup_rpath_${__lib}_${__deplib})
+			list(APPEND fixup_deplib_command  
+				COMMAND install_name_tool -change ${__deplib} ${CMAKE_INSTALL_PREFIX}/lib/${__deplib} ${CMAKE_INSTALL_PREFIX}/lib/${__lib} )
 		endforeach()
+		add_custom_target(fixup_rpath_${__lib} 
+			COMMAND install_name_tool -id ${CMAKE_INSTALL_PREFIX}/lib/${__lib}  ${CMAKE_INSTALL_PREFIX}/lib/${__lib}
+			${fixup_deplib_command}
+			DEPENDS bullet3)
 		add_dependencies(install fixup_rpath_${__lib})
 	endforeach()
 endif()
