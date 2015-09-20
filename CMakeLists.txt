@@ -29,7 +29,6 @@ ExternalProject_Add(bullet3
   	COMMAND ${CMAKE_COMMAND} -E rename src/LinearMath/btScalar.h src/LinearMath/btScalar.h.in
   	COMMAND patch -p0 -i ${PROJECT_SOURCE_DIR}/bullet_double_precision_patch.diff
 	COMMAND patch -p0 -i ${PROJECT_SOURCE_DIR}/bullet_windows_pkgconfig.diff
-  BUILD_ALWAYS TRUE
   )
 
 add_custom_target(install DEPENDS bullet3)  # just to have an explicit install rule
