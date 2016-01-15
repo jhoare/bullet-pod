@@ -31,6 +31,12 @@ ExternalProject_Add(bullet3
 	COMMAND patch -p0 -i ${PROJECT_SOURCE_DIR}/bullet_windows_pkgconfig.diff
   )
 
+ExternalProject_Add_Step(bullet3 forceconfigure
+	COMMAND ${CMAKE_COMMAND} -E echo "Force configure of ${proj}"
+	DEPENDEES update
+	DEPENDERS configure
+	ALWAYS 1)
+
 add_custom_target(install DEPENDS bullet3)  # just to have an explicit install rule
 
 if (APPLE)
