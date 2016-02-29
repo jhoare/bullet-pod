@@ -13,7 +13,7 @@ set(BULLET_OPTIONS -DINSTALL_LIBS=on
 		 -DUSE_DOUBLE_PRECISION=on) 
 
 if (WIN32)
-	list(APPEND BULLET_OPTIONS -DUSE_MSVC_RUNTIME_LIBRARY_DLL=off)
+	list(APPEND BULLET_OPTIONS -DUSE_MSVC_RUNTIME_LIBRARY_DLL=on)
 else()
 	list(APPEND BULLET_OPTIONS -DBUILD_SHARED_LIBS=on)   # shared libs doesn't work with msvc (there aren't any dllexports defined) 
 endif()
