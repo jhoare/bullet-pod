@@ -25,10 +25,22 @@ ExternalProject_Add(bullet3
   			 -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} 
   			 -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} 
   			 ${BULLET_OPTIONS}
-  PATCH_COMMAND patch -p0 -i ${PROJECT_SOURCE_DIR}/bullet_gjk_accuracy_patch.diff 
-  	COMMAND ${CMAKE_COMMAND} -E rename src/LinearMath/btScalar.h src/LinearMath/btScalar.h.in
-  	COMMAND patch -p0 -i ${PROJECT_SOURCE_DIR}/bullet_double_precision_patch.diff
-	COMMAND patch -p0 -i ${PROJECT_SOURCE_DIR}/bullet_windows_pkgconfig.diff
+  PATCH_COMMAND
+  ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/patches/CMakeLists.txt
+  CMakeLists.txt
+  COMMAND ${CMAKE_COMMAND} -E rename src/LinearMath/btScalar.h src/LinearMath/btScalar.h.in
+  COMMAND ${CMAKE_COMMAND} -E copy
+  ${PROJECT_SOURCE_DIR}/patches/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp
+  src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp
+  COMMAND ${CMAKE_COMMAND} -E copy
+  ${PROJECT_SOURCE_DIR}/patches/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp
+  src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp
+  COMMAND ${CMAKE_COMMAND} -E copy
+  ${PROJECT_SOURCE_DIR}/patches/src/LinearMath/btScalar.h
+  src/LinearMath/btScalar.h
+  COMMAND ${CMAKE_COMMAND} -E copy
+  ${PROJECT_SOURCE_DIR}/patches/src/LinearMath/CMakeLists.txt
+  src/LinearMath/CMakeLists.txt
   )
 
 ExternalProject_Add_Step(bullet3 forceconfigure
