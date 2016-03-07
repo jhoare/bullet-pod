@@ -1,0 +1,9 @@
+This is a tree of patched files from bullet.  Since we can not depend on
+patch on Windows, we pre-patch the files and use cmake -E copy to put
+them in place.  This was created by applying the patches found in the
+root directory of this project *.diff. Those patches were applied on
+a system with patch and the changed files were then put into a tar file.
+That tar file was extracted into this patches directory. If more files need
+patches you should create a diff file or update the diff files and then
+copy the affected files into this tree.  Then, add the copy -E command
+in the patch step of the external project in the CMakeLists.txt.
