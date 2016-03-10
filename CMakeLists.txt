@@ -19,28 +19,12 @@ else()
 endif()
 
 ExternalProject_Add(bullet3
-  URL https://github.com/bulletphysics/bullet3/archive/2.83.6.tar.gz
-#  URL_MD5 21a928f6e0f1c7f24b6f63ff823593f5
+  GIT_REPOSITORY https://github.com/RobotLocomotion/bullet3.git
+  GIT_TAG 333807e7e53000ebb7392aa7e12c6059eb4f581b
   CMAKE_ARGS -G${CMAKE_GENERATOR} 
   			 -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} 
   			 -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} 
   			 ${BULLET_OPTIONS}
-  PATCH_COMMAND
-  ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/patches/CMakeLists.txt
-  CMakeLists.txt
-  COMMAND ${CMAKE_COMMAND} -E rename src/LinearMath/btScalar.h src/LinearMath/btScalar.h.in
-  COMMAND ${CMAKE_COMMAND} -E copy
-  ${PROJECT_SOURCE_DIR}/patches/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp
-  src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp
-  COMMAND ${CMAKE_COMMAND} -E copy
-  ${PROJECT_SOURCE_DIR}/patches/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp
-  src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp
-  COMMAND ${CMAKE_COMMAND} -E copy
-  ${PROJECT_SOURCE_DIR}/patches/src/LinearMath/btScalar.h
-  src/LinearMath/btScalar.h
-  COMMAND ${CMAKE_COMMAND} -E copy
-  ${PROJECT_SOURCE_DIR}/patches/src/LinearMath/CMakeLists.txt
-  src/LinearMath/CMakeLists.txt
   )
 
 ExternalProject_Add_Step(bullet3 forceconfigure
