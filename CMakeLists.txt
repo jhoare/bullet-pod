@@ -33,7 +33,7 @@ ExternalProject_Add_Step(bullet3 forceconfigure
 	DEPENDERS configure
 	ALWAYS 1)
 
-add_custom_target(install DEPENDS bullet3)  # just to have an explicit install rule
+install(CODE "message(\"Nothing to do for install.\")")
 
 if (APPLE)
 	set(BULLET_INSTALL_LIBS 
