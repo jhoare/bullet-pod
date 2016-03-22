@@ -1,4 +1,5 @@
 if (APPLE)
+  message("JRH: Bullet postinstall.cmake running")
 	set(BULLET_INSTALL_LIBS
 		libBullet3OpenCL_clew.2.83.dylib
 		libBullet2FileLoader.2.83.dylib
@@ -20,5 +21,6 @@ if (APPLE)
     execute_process(
 			COMMAND install_name_tool -id ${CMAKE_INSTALL_PREFIX}/lib/${__lib}  ${CMAKE_INSTALL_PREFIX}/lib/${__lib}
 			${fixup_deplib_command})
+    message("JRH: fixup_deplib_command: ${fixup_deplib_command}")
 	endforeach()
 endif()
