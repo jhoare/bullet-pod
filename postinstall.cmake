@@ -15,9 +15,9 @@ if (APPLE)
 		set(fixup_deplib_command)
 		foreach(__deplib ${BULLET_INSTALL_LIBS})
 			execute_process(
-				COMMAND install_name_tool -change ${__deplib} ${CMAKE_INSTALL_PREFIX}/lib/${__deplib} ${CMAKE_INSTALL_PREFIX}/lib/${__lib} )
+        COMMAND ${CMAKE_INSTALL_NAME_TOOL} -change ${__deplib} ${CMAKE_INSTALL_PREFIX}/lib/${__deplib} ${CMAKE_INSTALL_PREFIX}/lib/${__lib} )
 		endforeach()
     execute_process(
-			COMMAND install_name_tool -id ${CMAKE_INSTALL_PREFIX}/lib/${__lib}  ${CMAKE_INSTALL_PREFIX}/lib/${__lib})
+      COMMAND ${CMAKE_INSTALL_NAME_TOOL} -id ${CMAKE_INSTALL_PREFIX}/lib/${__lib}  ${CMAKE_INSTALL_PREFIX}/lib/${__lib})
 	endforeach()
 endif()
