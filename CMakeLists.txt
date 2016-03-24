@@ -57,6 +57,6 @@ if (APPLE)
     add_custom_target(fixup_rpath_${__lib} ALL
       COMMAND ${CMAKE_INSTALL_NAME_TOOL} -id ${CMAKE_INSTALL_PREFIX}/lib/${__lib}  ${CMAKE_INSTALL_PREFIX}/lib/${__lib}
       ${fixup_deplib_command})
-    add_dependencies(bullet3 fixup_rpath_${__lib})
+    add_dependencies(fixup_rpath_${__lib} bullet3)
   endforeach()
 endif()
