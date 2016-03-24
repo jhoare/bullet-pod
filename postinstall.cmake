@@ -12,11 +12,15 @@ if (APPLE)
     libLinearMath.2.83.dylib )
 
   foreach(__lib ${BULLET_INSTALL_LIBS})
+    message("JRH: Before: ${__lib}")
+    execute_process(COMMAND otool -L ${CMAKE_INSTALL_PREFIX}/lib/${__lib})
     execute_process(
       COMMAND ${CMAKE_INSTALL_NAME_TOOL} -id ${CMAKE_INSTALL_PREFIX}/lib/${__lib}  ${CMAKE_INSTALL_PREFIX}/lib/${__lib})
     foreach(__deplib ${BULLET_INSTALL_LIBS})
       execute_process(
         COMMAND ${CMAKE_INSTALL_NAME_TOOL} -change ${__deplib} ${CMAKE_INSTALL_PREFIX}/lib/${__deplib} ${CMAKE_INSTALL_PREFIX}/lib/${__lib} )
     endforeach()
+    message("JRH: After: ${__lib}")
+    execute_process(COMMAND otool -L ${CMAKE_INSTALL_PREFIX}/lib/${__lib})
   endforeach()
 endif()
